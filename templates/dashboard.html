@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f5f7fa;
+        }
+
+        .navbar {
+            background-color: #ff385c;
+        }
+
+        .navbar-brand {
+            color: white;
+            font-weight: bold;
+        }
+
+        .card {
+            border-radius: 15px;
+            transition: 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 🔥 LOADER -->
+<div id="loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:9999;">
+    <div class="d-flex justify-content-center align-items-center" style="height:100%;">
+        <div class="spinner-border text-danger"></div>
+    </div>
+</div>
+
+<!-- 🔥 NAVBAR -->
+<nav class="navbar navbar-expand-lg px-4">
+    <a class="navbar-brand" href="/dashboard">🏡 Airbnb AI</a>
+
+    <div class="ms-auto">
+        <a href="/dashboard" class="btn btn-light me-2">Dashboard</a>
+        <a href="/predict_page" class="btn btn-dark me-2">Predict</a>
+        <a href="/history" class="btn btn-outline-light me-2">History</a>
+        <a href="/logout" class="btn btn-danger">Logout</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <!-- 🔥 FILTERS -->
+    <div class="card p-3 mb-4 shadow-sm">
+        <form method="GET" action="/dashboard" id="filterForm">
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <select name="location" class="form-control">
+                        <option value="">All Locations</option>
+                        <option>Brooklyn</option>
+                        <option>Manhattan</option>
+                        <option>Queens</option>
+                        <option>Bronx</option>
+                        <option>Staten Island</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <select name="room_type" class="form-control">
+                        <option value="">All Rooms</option>
+                        <option>Private room</option>
+                        <option>Entire home/apt</option>
+                        <option>Shared room</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <input type="number" name="min_price" class="form-control" placeholder="Min Price">
+                </div>
+
+                <div class="col-md-2">
+                    <input type="number" name="max_price" class="form-control" placeholder="Max Price">
+                </div>
+
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100">Apply</button>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+
+    <!-- 📊 GRAPHS -->
+    <div class="row">
+
+        <div class="col-md-12 mb-4">
+            <div class="card shadow p-3">
+                {{ graph1|safe }}
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow p-3">
+                {{ graph2|safe }}
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow p-3">
+                {{ graph3|safe }}
+            </div>
+        </div>
+
+        <div class="col-md-12 mb-4">
+            <div class="card shadow p-3">
+                {{ graph4|safe }}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 🔥 JS -->
+<script>
+document.getElementById("filterForm").addEventListener("submit", function() {
+    document.getElementById("loader").style.display = "block";
+});
+</script>
+
+</body>
+</html>

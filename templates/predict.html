@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Predict Price</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4">🏡 Price Prediction</h2>
+
+    <form method="POST" action="/predict">
+
+        <input class="form-control mb-3" type="number" step="any" name="latitude" placeholder="Latitude" required>
+        <input class="form-control mb-3" type="number" step="any" name="longitude" placeholder="Longitude" required>
+        <input class="form-control mb-3" type="number" name="minimum_nights" placeholder="Minimum Nights" required>
+        <input class="form-control mb-3" type="number" name="availability" placeholder="Availability" required>
+
+        <select class="form-control mb-3" name="location">
+            <option>Brooklyn</option>
+            <option>Manhattan</option>
+            <option>Queens</option>
+            <option>Bronx</option>
+            <option>Staten Island</option>
+        </select>
+
+        <select class="form-control mb-3" name="room_type">
+            <option>Private room</option>
+            <option>Entire home/apt</option>
+            <option>Shared room</option>
+        </select>
+
+        <button class="btn btn-success w-100">Predict</button>
+
+    </form>
+
+</div>
+
+<script>
+document.querySelector("form").addEventListener("submit", function(){
+    alert("🔄 Calculating best price...");
+});
+</script>
+
+</body>
+</html>

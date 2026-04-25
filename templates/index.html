@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Airbnb AI Predictor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+        }
+
+        .navbar {
+            background: #ff385c;
+        }
+
+        /* NAVBAR BASE */
+#navbar {
+    transition: all 0.3s ease;
+    padding: 15px 20px;
+}
+
+/* DEFAULT (TRANSPARENT) */
+#navbar {
+    background: transparent;
+    color: white;
+}
+
+/* SCROLL EFFECT */
+#navbar.scrolled {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+/* TEXT COLOR CHANGE */
+#navbar.scrolled .navbar-brand {
+    color: #333;
+}
+
+
+        .hero {
+            height: 90vh;
+            background: linear-gradient(135deg, #ff5a5f, #ff9966);
+            color: white;
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+
+/* HERO STRUCTURE */
+.hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* OVERLAY */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.55);
+}
+
+/* CONTENT */
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+/* ANIMATION */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 1s ease forwards;
+}
+
+.delay {
+    animation-delay: 0.5s;
+}
+
+.delay2 {
+    animation-delay: 1s;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+}
+
+.hero p {
+    font-size: 1.2rem;
+}
+
+
+
+
+
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: bold;
+        }
+
+        .btn-custom {
+            background: white;
+            color: #ff385c;
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: bold;
+        }
+
+        .features {
+            padding: 60px 20px;
+            background: #f8f9fa;
+        }
+
+        .feature-card {
+            padding: 25px;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .cta {
+            background: #ff385c;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+      
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    transition: 0.4s;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.feature-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+    color: #ff385c;
+}
+
+
+    </style>
+</head>
+
+<body>
+
+<!-- 🔥 NAVBAR -->
+<nav id="navbar" class="navbar navbar-expand-lg fixed-top px-4">
+
+    <a class="navbar-brand fw-bold" href="/">🏡 Airbnb AI</a>
+
+    <div class="ms-auto d-flex align-items-center">
+
+    <a href="/" class="nav-link text-dark me-3">Home</a>
+    <a href="/about" class="nav-link text-dark me-3">About</a>
+    <a href="/bookings" class="nav-link text-dark me-3">Bookings</a>
+
+    {% if session.get('user') %}
+    
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+            👤 {{ session['user'] }}
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="/profile">Profile</a></li>
+            <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="/logout">Logout</a></li>
+        </ul>
+    </div>
+
+    {% else %}
+
+    <a href="/login" class="btn btn-light me-2">Login</a>
+    <a href="/register" class="btn btn-outline-dark">Register</a>
+
+    {% endif %}
+
+</div>
+</nav>
+
+<!-- 🔥 HERO -->
+<section class="hero" style="position:relative; height:100vh; overflow:hidden;">
+
+    <!-- IMAGE -->
+    <img id="heroImage"
+         src="{{ url_for('static', filename='image/nyc_airbnb_image.jpg') }}"
+         style="width:100%; height:100%; object-fit:cover; transition: opacity 1s;">
+
+    <!-- OVERLAY -->
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);"></div>
+
+    <!-- CONTENT -->
+    <div 
+        data-aos="fade-up"
+        style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white; text-align:center;">
+        
+        <h1 style="font-size:3.5rem; font-weight:bold;">Smart Airbnb Pricing</h1>
+        <p class="mt-3">Predict. Analyze. Maximize your rental income.</p>
+
+        <div class="mt-4">
+            <a href="/login" class="btn btn-light me-3 px-4">Login</a>
+            <a href="/register" class="btn btn-outline-light px-4">Register</a>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- 🔥 FEATURES -->
+<section class="features py-5" style="background:linear-gradient(135deg,#f8f9fa,#e9ecef);">
+
+    <div class="container text-center">
+
+        <h2 class="mb-5" data-aos="fade-up">Why Choose Airbnb AI?</h2>
+
+        <div class="row g-4">
+
+            <!-- CARD 1 -->
+            <div class="col-md-4" data-aos="zoom-in">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>Smart Pricing</h4>
+                    <p>AI-powered pricing to maximize your revenue and stay competitive.</p>
+                </div>
+            </div>
+
+            <!-- CARD 2 -->
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h4>Location Insights</h4>
+                    <p>Discover high-demand areas and optimize listings with data.</p>
+                </div>
+            </div>
+
+            <!-- CARD 3 -->
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="400">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4>AI Predictions</h4>
+                    <p>Accurate predictions using machine learning models trained on real data.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- 🔥 CTA -->
+<section class="cta">
+    <h2>Start Optimizing Your Airbnb Today 🚀</h2>
+    <p class="mt-3">Join now and boost your rental income</p>
+
+    <a href="/register" class="btn btn-light mt-3">Create Free Account</a>
+</section>
+
+<!-- 🔥 FOOTER -->
+<div class="footer">
+    <p>© 2026 Airbnb AI | Built with Flask & ML</p>
+</div>
+
+<script>
+let images = [
+    "{{ url_for('static', filename='image/nyc_airbnb_image.jpg') }}",
+    "{{ url_for('static', filename='image/nyc_airbnb_image2.jpg') }}",
+    "{{ url_for('static', filename='image/room.jpg') }}"
+];
+
+let index = 0;
+let hero = document.getElementById("heroImage");
+
+setInterval(() => {
+    index = (index + 1) % images.length;
+    hero.style.opacity = 0;
+
+    setTimeout(() => {
+        hero.src = images[index];
+        hero.style.opacity = 1;
+    }, 500);
+
+}, 3000);
+</script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+<script>
+AOS.init({
+    duration: 1000,
+    once: true
+});
+</script>
+<script>
+window.addEventListener("scroll", function () {
+    let navbar = document.getElementById("navbar");
+
+    if (window.scrollY > 50) {
+        navbar.classList.add("scrolled");
+    } else {
+        navbar.classList.remove("scrolled");
+    }
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
