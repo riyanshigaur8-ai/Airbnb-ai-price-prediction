@@ -22,12 +22,15 @@ def create_tables():
 
     # Users table
     conn.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE,
-            password TEXT
-        )
-    """)
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE,
+    email TEXT,
+    phone TEXT,
+    age INTEGER,
+    password TEXT
+)
+""")
 
     # Predictions table
     conn.execute("""
@@ -110,24 +113,39 @@ def bookings():
         return redirect("/login")
     return render_template("bookings.html")
 
-@app.route("/profile", methods=["POST"])
+@app.route("/profile", methods=["GET", "POST"])
 def profile():
     if "user" not in session:
         return redirect("/login")
 
-    email = request.form["email"]
-    phone = request.form["phone"]
-    age = request.form["age"]
-
     conn = get_db()
-    conn.execute(
-        "UPDATE users SET email=?, phone=?, age=? WHERE username=?",
-        (email, phone, age, session["user"])
-    )
-    conn.commit()
+
+    user = conn.execute(
+        "SELECT * FROM users WHERE username=?",
+        (session["user"],)
+    ).fetchone()
+
+    if request.method == "POST":
+        email = request.form["email"]
+        phone = request.form["phone"]
+        age = request.form["age"]
+
+        conn.execute("""
+            UPDATE users
+            SET email=?, phone=?, age=?
+            WHERE username=?
+        """, (email, phone, age, session["user"]))
+
+        conn.commit()
+
+        user = conn.execute(
+            "SELECT * FROM users WHERE username=?",
+            (session["user"],)
+        ).fetchone()
+
     conn.close()
 
-    return redirect("/profile")
+    return render_template("profile.html", user=user)
 
 @app.route("/logout")
 def logout():
